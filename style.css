@@ -5,7 +5,8 @@
 }
 
 header{
-  background-image: url("images/bluebubbles.png");
+  /*background-image: url("images/bluebubbles.png");*/
+  background-color: grey;
   padding:10px;
   color: whitesmoke;
   
