@@ -1,42 +1,84 @@
-
 /* General Styles */
+* {
+  
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+header{
+  background-image: url('/images/bluebubbles.PNG');
+  padding:10px;
+  color: whitesmoke;
+  
+}
+
+/* To center the button */
+div.start-page {
+  text-align:center;
+}
+
+h1 {
+  text-align: center;
+  color: whitesmoke;
+}
+
+.question-and-score {
+  text-align: center;
+}
 
 main {
-  margin-top: 60px;
+  padding: 6px;
+  color: black;
 }
 
-main h1 {
-  margin: 0 10px;
+p{
   text-align: center;
-  font-family: 'Amatic SC', cursive;
-  font-size: 65px;
 }
 
-main h2 {
-  margin: 18px 0 12px 0;
-  border-bottom: 1px solid #5c4f41;
-  font-family: 'Special Elite', cursive;
-  font-size: 24px;
+/* To center the button */
+div.row button {
+  text-align: center;
+  margin: 0 auto;
+  display:block;
+  margin-top: 10px;
+} 
+
+/* div.col-12 {
+  margin: 0 auto;
+} */
+
+button {
+  background-color: #555555;
+  color: white;
+  padding: 10px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 10px;
+  border-radius: 4px;
+
 }
 
-main h3 {
-  margin: 18px 0 12px 0;
-  border-bottom: 1px solid #5c4f41;
-  font-family: 'Special Elite', cursive;
-  font-size: 18px;
+body {
+  /* background-color: grey; */
+
+  /* background-repeat:  */
+  background-size: cover;
 }
 
-main p {
-  font-family: 'Roboto', sans-serif;
-  margin-top: 0;
+form {
+  padding: 10px 15px;
+  display: block;
+  margin: 0 auto;  
 }
 
-.bg-primary {
-  background-color: #775f47;
+legend {
+  font-size: 20px;
+  padding-bottom: 10px;
 }
 
-.group img {
-  width: 100%;
+ul li {
+  list-style: none
 }
 
 /* Groups & Items  (Mobile First) */
@@ -66,5 +108,9 @@ main p {
 
   .group {
     flex-direction: row;
+  }
+
+  main {
+    padding: 60px;
   }
 }
