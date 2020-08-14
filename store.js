@@ -1,5 +1,11 @@
 
 const STORE = {
+    // Initialize variables to track the score and current question
+    score: 0,
+    currentQuestion: 0,
+    page: "landing",
+
+    //Question array of objects
     questions: [
 
         {
@@ -12,6 +18,7 @@ const STORE = {
                 "technical expertise"
             ],
             answer: "buildings"
+        
         },
 
         {

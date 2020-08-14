@@ -1,22 +1,41 @@
 'use strict';
 
-// Initialize variables to track the score and current question
-let score = 0;
-let currentQuestion = 0;
+function render() {
+    let html="";
+    if (STORE.page == "landing") {
+        html = `
+        <section class="start-section">
+      <!-- This is the description text for the quiz -->
+      <div class="start-page">
+        <p> This quiz tests five basic corporate finance topics.</p>
+        <p>Enjoy the quiz!</p>
+      </div>
 
-// Responds to "start" button --------------------- TESTED AND WORKS ----------------------
-function startQuiz() {
-    $('button#start').on('click', function (event) {
-        displayQuestion();
-    })
+      <!-- This is the start button -->
+      <div class="start-page">
+        <button type="button" id="start">Start The Quiz</button>
+      </div>
+    </section>
+        `
+    }
+    else if (STORE.page=="question") {
+        html = displayQuestion();
+    }
+  
+  
+    else if (STORE.page=="score"){
+       html = displayResults();
+    }
+
+    $("main").html(html);
 }
 
-// Display current status (i.e. score and question progress) -------- TESTED AND WORKS / UPDATE WITH FLEXBOX! ------
+// Display current status (i.e. score and question progress) -------- TESTED AND WORKS ------
 function displayStatus() {
     const statusHtml = $(`
             <p>
-                Question number: ${currentQuestion + 1}/${STORE.questions.length}    
-                Score: ${score}/${STORE.questions.length}
+                Question number: ${STORE.currentQuestion + 1}/${STORE.questions.length}    
+                Score: ${STORE.score}/${STORE.questions.length}
             </p>
         `);
     $('.question-and-score').html(statusHtml);
@@ -24,27 +43,27 @@ function displayStatus() {
 
 // Display answer choices for questions ---------------- TESTED AND WORKS -------------------------
 function displayChoices() {
-
-    let question = STORE.questions[currentQuestion];
-    //console.log(question) // QA is OK
+    let options = "";
+    let question = STORE.questions[STORE.currentQuestion];
     for (let i = 0; i < question.options.length; i++) {
-        //console.log(question.options.length); //QA is OK
-        $('.js-options').append(`
+        options +=
+            `
         <input type = "radio" name="options" id="option${i + 1}" value="${question.options[i]}" tabindex="${i + 1}" required>
         <label for="option${i + 1}"> ${question.options[i]}</label>
         <br>
         <span id="js-r${i + 1}"></span>
-        `);
+        `;
     }
+    return options;
 
 }
 
 // Displays the current question  ------------------------- TESTED AND WORKS ---------------------
 function displayQuestion() {
-
-    let question = STORE.questions[currentQuestion];
+    
+    let question = STORE.questions[STORE.currentQuestion];
     displayStatus();
-    const questionHtml = $(`
+    const questionHtml = `
     <div>
         <form id="js-questions" class="question-form">
 
@@ -57,8 +76,11 @@ function displayQuestion() {
 
                 <div class="row options">
                     <div class="col-12">
-                        <div class="js-options"> </div>  <!-- -----.js-options added here ------ -->
+                        <div class="js-options"> 
+                        ${displayChoices()}
+                        </div>  <!-- -----.js-options added here ------ -->
                     </div>
+
                 </div>
 
                 <div class="row">
@@ -69,10 +91,8 @@ function displayQuestion() {
             </fieldset>
         </form>
     </div>
-    `);
-    $('main').html(questionHtml);
-    displayChoices();
-    $('button#next-question').hide(); // hides the next question button until answer is evaluated
+    `;
+    return questionHtml;
 
 }
 
@@ -82,35 +102,47 @@ function displayResults() {
     $('#js-answered').hide();
     $('#js-score').hide();
 
-    let resultHtml = $(
+    let resultHtml =
         `<div class="results">
             <form id="js-restart-quiz">
                 <fieldset>
                     <div class="row">
                         <div class="col=12">
                             <legend>You answered ${STORE.questions.length} questions </legend> <br>
-                            <legend>Your final score is: ${score}/${STORE.questions.length}</legend> <br>
+                            <legend>Your final score is: ${STORE.score}/${STORE.questions.length}</legend> <br>
                             <button type="button" id="restart">Restart The Quiz</button>
                         </div>
                     </div>
                 </fieldset>
             </form>
         </div>
-        `);
+        `;
 
-    $('main').html(resultHtml);
 
+    //$('main').html(resultHtml);
+    return resultHtml;
+
+}
+
+
+// Responds to "start" button --------------------- TESTED AND WORKS ----------------------
+function startQuiz() {
+    $('body').on('click','button#start', function (event) {
+        STORE.page="question";
+        render();
+    })
 }
 
 // Responds to "next question" button -------------- TESTED AND WORKS ------------------
 function nextQuestion() {
 
     $('body').on('click', 'button#next-question', function (event) {
-        if (currentQuestion == STORE.questions.length) {
-            displayResults();
+        if (STORE.currentQuestion == STORE.questions.length) {
+            STORE.page="score";
         } else {
-            displayQuestion();
+            STORE.page="question";
         }
+        render();
     });
 
 }
@@ -120,11 +152,11 @@ function evalAnswer() {
 
     $('body').on('submit', '#js-questions', function (event) {
         event.preventDefault(); // prevent default form submission
-        let currentQues = STORE.questions[currentQuestion];
+        let currentQues = STORE.questions[STORE.currentQuestion];
         let selectedOption = $("input[name=options]:checked").val(); //obtain selected answer choice
 
         if (selectedOption == currentQues.answer) {
-            score++;
+            STORE.score++;
             displayStatus();
             $('main').html(`
             <p> Your answer is correct! </p>
@@ -145,7 +177,7 @@ function evalAnswer() {
             `);
         }
         // increment counter to next question
-        currentQuestion++;
+        STORE.currentQuestion++;
     });
 
 }
@@ -153,21 +185,20 @@ function evalAnswer() {
 // Responds to "restart quiz" button ------------TESTED AND WORKS --------------------
 function restartQuiz() {
     $('body').on('click', 'button#restart', function (event) {
-        //console.log("* RESTART BUTTON HAS BEEN PRESSED");
-        score = 0;
-        currentQuestion = 0;
-        displayQuestion();
+        STORE.score = 0;
+        STORE.currentQuestion = 0;
+        STORE.page="landing";
+        render();
     });
 }
 
 // Main function to call all others
 function handleQuizApp() {
-    //console.log("> handleQuizApp function has started");
     startQuiz();
     nextQuestion();
     evalAnswer();
     restartQuiz();
-    //console.log("> handleQuizApp function has ended");
+    render();
 }
 
 $(handleQuizApp());
